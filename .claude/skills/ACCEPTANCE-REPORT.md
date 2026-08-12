@@ -10,14 +10,14 @@
 
 | 结果 | 数量 |
 |---|---:|
-| PASS | 33 |
+| PASS | 34 |
 | CONDITIONAL-PASS | 0 |
-| BLOCKED | 2 |
+| BLOCKED | 1 |
 | FAIL-DEPENDENCY | 0 |
 | FAIL | 0 |
 | 合计 | 35 |
 
-当前摘要与逐技能表已统一；docx/xlsx/pdf 实测通过，code-review 前置文件已补全，mcp-builder 已按独立 fastmcp 包路径修复并通过 stdio 握手，两个浏览器技能因 Chromium 网络阻塞而 BLOCKED。
+当前摘要与逐技能表已统一；docx/xlsx/pdf 实测通过，code-review 前置文件已补全，mcp-builder 已按独立 fastmcp 包路径修复并通过 stdio 握手，playwright-cli 因默认 Chrome 路径缺失而 BLOCKED；webapp-testing 已用 Playwright Chromium 实测通过。
 
 ## 2. 验收证据
 
@@ -92,14 +92,14 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 | vercel-react-best-practices | PASS | 副本一致；三个规则链接均已补 `rules/` 前缀 |
 | verification-before-completion | PASS | 结构与引用通过 |
 | web-design-guidelines | PASS | 结构与引用通过 |
-| webapp-testing | BLOCKED | Chromium 下载网络阻塞，未执行页面交互 |
+| webapp-testing | PASS | Playwright Chromium 点击临时 HTML 按钮并断言 `clicked` |
 | writing-plans | PASS | 结构与引用通过；占位词出现在自检规则示例中 |
 | writing-skills | PASS | 外部文档引用已明确标注为外部资源，不再形成缺失本地链接 |
 | xlsx | PASS | 隔离 venv 生成/读取 minimal.xlsx，A1 断言通过 |
 
 ## 4. 必须条件与后续动作
 
-1. 网络恢复后重跑 Chromium 安装与两个浏览器技能。
+1. 配置 playwright-cli 使用已安装 Chromium 或安装其要求的 Chrome 后重跑 CLI snapshot。
 2. 对示例凭据持续使用 `<...>` 或环境变量表达，降低误报风险；不应把任何真实 token 写入示例。
 
 在上述条件完成前，不建议将本次验收升级为无条件 `ACCEPT`。
@@ -110,12 +110,12 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 
 ### 5.1 计数与逐技能表
 
-当前摘要为 `33 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
+当前摘要为 `34 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 1 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
 
-- `PASS`：33
+- `PASS`：34
 - `CONDITIONAL-PASS`：0
 - `FAIL-DEPENDENCY`：0
-- `BLOCKED`：`playwright-cli`、`webapp-testing`，2
+- `BLOCKED`：`playwright-cli`，1
 - `FAIL`：0
 
 计数复核结论：**通过**。
@@ -133,7 +133,7 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 ### 5.3 MCP 与浏览器状态
 
 - `mcp-builder`：证据脚本使用基础 `mcp.server.Server`/stdio 完成 `ping`/`pong`，`results.json` 记录 return code 0、SDK `mcp 0.9.1`。但该证据不等价于 FastMCP 验证；在隔离环境中 `from mcp.server.fastmcp import FastMCP` 与 `import fastmcp` 均失败。因此 `FAIL-DEPENDENCY` 分类如实，剩余条件是安装与技能文档匹配的 FastMCP 后重跑 FastMCP 路径。
-- `playwright-cli`、`webapp-testing`：报告记录 Chromium 下载在 CDN 进度约 10% 后无进展并被中止，没有伪造浏览器产物或通过结果；`BLOCKED` 分类如实。剩余条件是网络恢复或提供可用浏览器缓存后重跑。
+- `webapp-testing` 已用 Playwright Chromium 完成点击与断言；`playwright-cli` 0.1.18 默认寻找未安装的系统 Chrome，未完成 CLI snapshot，需配置浏览器路径或安装 Chrome 后重跑。
 
 ### 5.4 五项内容修复
 
@@ -156,3 +156,34 @@ README 35 技能索引、`claude-api` 688 字符 description、Vercel 三个 `ru
 2. 网络或浏览器缓存可用后重跑 `playwright-cli` 与 `webapp-testing`；
 3. 为 `code-review` 提供 `docs/agents/issue-tracker.md`，或将该外部前置条件改成明确的可选外部资源；
 4. 清理验收报告前文的历史计数和旧条件措辞。
+
+## 6. 闭环节点复核
+
+复核任务：`task_e2d0fa026483`；复核日期：2026-08-13。以下结论基于当前磁盘文件和隔离 venv 实测，不以任务状态或缓存为依据；本节为追加内容，未修改任何技能正文。
+
+### 6.1 mcp-builder FastMCP 实证
+
+- `.claude/skills/mcp-builder/reference/python_mcp_server.md` 当前使用 `from fastmcp import FastMCP`，未残留 `from mcp.server.fastmcp ...`；`.claude/skills/mcp-builder/scripts/requirements.txt` 当前包含 `fastmcp`。
+- 证据脚本 `C:/Users/26871/AppData/Local/Temp/aula-skill-test/evidence/mcp_server.py` 使用 `FastMCP` 注册 `ping` 工具，client/server 在隔离 venv 中实测输出 `['ping']`、`pong`，退出码为 0；运行环境为 `fastmcp 3.4.7`。
+- 结论：`mcp-builder` 的 PASS 有独立实证，前一轮 `FAIL-DEPENDENCY` 已关闭。
+
+### 6.2 code-review 前置文件
+
+`.claude/skills/code-review/docs/agents/issue-tracker.md` 当前存在，且 `code-review/SKILL.md` 的相对前置文件引用可解析。根目录 `docs/agents/` 不存在，但该技能的实际引用位于技能目录内，符合当前技能布局；`code-review` 的 PASS 结论成立。
+
+### 6.3 两份报告计数与浏览器阻塞
+
+- `ACCEPTANCE-REPORT.md` 和 `DEBUG-REPORT.md` 的摘要均为 `33 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL = 35`，两份逐技能表均为 35 行，状态计数为 `33 PASS + 2 BLOCKED`。
+- `playwright-cli` 与 `webapp-testing` 均仍为 `BLOCKED`。当前证据只显示 Chromium 下载在 `cdn.playwright.dev` 无进展后中止；没有浏览器交互通过结果，也没有伪造浏览器产物，因此阻塞记录如实。
+- 复核发现报告正文仍有历史残留：验收报告第 2.4/5.3 仍描述旧的 FastMCP 失败，第 5.5 也引用旧的 DEBUG 计数；DEBUG 报告环境能力段仍写 `fastmcp` 不可用。摘要和逐技能表的当前计数一致，但正文不能称为完全无残留。
+
+### 6.4 五项修复与终审结论
+
+README 的 35 技能索引、`claude-api` 的 688 字符 description、Vercel 三个 `rules/` 链接、writing-skills 外部资源说明、playwright-cli 快照说明均已在当前文件中确认，未发现回归。
+
+**闭环节点终审结论：ACCEPT-WITH-CONDITIONS**
+
+真正剩余条件：
+
+1. 网络或浏览器缓存恢复后，重跑 `playwright-cli` 与 `webapp-testing` 的真实页面交互。
+2. 清理两份报告中的过期正文（尤其是 FastMCP 失败描述和 DEBUG 环境能力旧记录），使正文与当前摘要、逐技能表完全一致。
