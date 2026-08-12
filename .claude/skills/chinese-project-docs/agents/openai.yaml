@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chinese Project Docs"
+  short_description: "Write accurate Chinese project documentation"
+  default_prompt: "Update project documentation in Chinese from repository evidence, preserving commands, identifiers, and technical accuracy."

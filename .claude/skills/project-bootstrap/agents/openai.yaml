@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Bootstrap"
+  short_description: "Inspect a repository and establish its development workflow"
+  default_prompt: "Inspect this repository, identify its stack and package manager, then produce a concise development workflow and next checks."

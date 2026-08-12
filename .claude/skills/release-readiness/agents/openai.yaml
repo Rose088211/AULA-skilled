@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Readiness"
+  short_description: "Validate a change before commit, review, or release"
+  default_prompt: "Run a proportionate pre-release check, inspect the diff and test evidence, and report blockers, risks, and the exact remaining actions."
