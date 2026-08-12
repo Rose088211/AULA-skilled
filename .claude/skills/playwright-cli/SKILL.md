@@ -269,7 +269,7 @@ After each command, playwright-cli provides a snapshot of the current browser st
 - Page URL: https://example.com/
 - Page Title: Example Domain
 ### Snapshot
-[Snapshot](.playwright-cli/page-2026-02-14T19-22-42-679Z.yml)
+The snapshot is saved to a timestamped `.playwright-cli/` file by the command; the filename below is illustrative only and is not a repository asset: `.playwright-cli/page-2026-02-14T19-22-42-679Z.yml`.
 ```
 
 You can also take a snapshot on demand using `playwright-cli snapshot` command. All the options below can be combined as needed.

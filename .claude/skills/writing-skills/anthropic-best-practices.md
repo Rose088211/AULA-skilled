@@ -287,9 +287,9 @@ with pdfplumber.open("file.pdf") as pdf:
 
 ## Advanced features
 
-**Form filling**: See [FORMS.md](FORMS.md) for complete guide
-**API reference**: See [REFERENCE.md](REFERENCE.md) for all methods
-**Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns
+**Form filling**: See the external form-filling guide supplied with the target skill, if present.
+**API reference**: See the external API reference supplied with the target skill, if present.
+**Examples**: See the target skill's external examples guide, if supplied.
 ````
 
 Agents load FORMS.md, REFERENCE.md, or EXAMPLES.md only when needed.
@@ -313,19 +313,19 @@ bigquery-skill/
 
 ## Available datasets
 
-**Finance**: Revenue, ARR, billing → See [reference/finance.md](reference/finance.md)
-**Sales**: Opportunities, pipeline, accounts → See [reference/sales.md](reference/sales.md)
-**Product**: API usage, features, adoption → See [reference/product.md](reference/product.md)
-**Marketing**: Campaigns, attribution, email → See [reference/marketing.md](reference/marketing.md)
+**Finance**: Revenue, ARR, billing → See the target skill's external finance reference, if supplied.
+**Sales**: Opportunities, pipeline, accounts → See the target skill's external sales reference, if supplied.
+**Product**: API usage, features, adoption → See the target skill's external product reference, if supplied.
+**Marketing**: Campaigns, attribution, email → See the target skill's external marketing reference, if supplied.
 
 ## Quick search
 
 Find specific metrics using grep:
 
 ```bash
-grep -i "revenue" reference/finance.md
-grep -i "pipeline" reference/sales.md
-grep -i "api usage" reference/product.md
+grep -i "revenue" <target-skill-reference>/finance.md
+grep -i "pipeline" <target-skill-reference>/sales.md
+grep -i "api usage" <target-skill-reference>/product.md
 ```
 ````
 
@@ -338,14 +338,14 @@ Show basic content, link to advanced content:
 
 ## Creating documents
 
-Use docx-js for new documents. See [DOCX-JS.md](DOCX-JS.md).
+Use docx-js for new documents. Consult the external docx-js guide supplied with the target skill, if present.
 
 ## Editing documents
 
 For simple edits, modify the XML directly.
 
-**For tracked changes**: See [REDLINING.md](REDLINING.md)
-**For OOXML details**: See [OOXML.md](OOXML.md)
+**For tracked changes**: See the external REDLINING guide supplied with the target skill, if present.
+**For OOXML details**: See the external OOXML guide supplied with the target skill, if present.
 ```
 
 Agents read REDLINING.md or OOXML.md only when the user needs those features.
@@ -360,10 +360,10 @@ Agents may partially read files when they're referenced from other referenced fi
 
 ```markdown  theme={null}
 # SKILL.md
-See [advanced.md](advanced.md)...
+See the external `advanced.md` guide supplied with the target skill, if present.
 
 # advanced.md
-See [details.md](details.md)...
+See the external `details.md` guide supplied with the target skill, if present.
 
 # details.md
 Here's the actual information...
@@ -375,9 +375,9 @@ Here's the actual information...
 # SKILL.md
 
 **Basic usage**: [instructions in SKILL.md]
-**Advanced features**: See [advanced.md](advanced.md)
-**API reference**: See [reference.md](reference.md)
-**Examples**: See [examples.md](examples.md)
+**Advanced features**: See the external `advanced.md` guide supplied with the target skill, if present.
+**API reference**: See the external `reference.md` guide supplied with the target skill, if present.
+**Examples**: See the external `examples.md` guide supplied with the target skill, if present.
 ```
 
 ### Structure longer reference files with table of contents
