@@ -10,8 +10,10 @@
 
 | 结果 | 数量 |
 |---|---:|
-| PASS | 29 |
-| CONDITIONAL-PASS | 6 |
+| PASS | 31 |
+| CONDITIONAL-PASS | 1 |
+| BLOCKED | 2 |
+| FAIL-DEPENDENCY | 1 |
 | FAIL | 0 |
 | 合计 | 35 |
 
@@ -51,9 +53,9 @@ Hermes 调试报告的历史摘要曾与逐技能表不一致；Hermes 后续已
 
 ### 2.4 功能可用性
 
-Hermes 的结构检查、OpenAPI YAML 解析和 Python 语法检查证据可信；但当前环境缺少 `python-docx`、`openpyxl`、PDF 依赖、`fastmcp` 和 `playwright-cli`，因此以下技能没有完成真实 artifact/浏览器冒烟：`docx`、`mcp-builder`、`pdf`、`playwright-cli`、`webapp-testing`、`xlsx`。
+隔离 venv 已完成 `docx`、`xlsx`、`pdf` 的真实 artifact 冒烟并通过；`mcp-builder` 实测发现当前 mcp 包不含 `mcp.server.fastmcp` 且未安装 fastmcp；`playwright-cli`、`webapp-testing` 因 Chromium 下载网络阻塞未执行。
 
-这 6 项不能判为 FAIL，但在补齐隔离测试依赖并完成最小产物可读性/可运行性验证前，只能是条件通过。五项内容修复本身已关闭，不再产生额外条件项。
+docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两个浏览器技能标记 BLOCKED，等待网络恢复。另有 `code-review` 依赖的 `docs/agents/issue-tracker.md` 未在当前仓库落盘，因此也保留为条件通过。其余五项内容修复已关闭。
 
 ## 3. 逐技能结论
 
@@ -66,17 +68,17 @@ Hermes 的结构检查、OpenAPI YAML 解析和 Python 语法检查证据可信�
 | chinese-project-docs | PASS | 结构与 agent 配置引用通过 |
 | claude-api | PASS | description 复验为 688 字符；正文引用目标存在 |
 | cli-wrapper | PASS | 结构与本地引用通过 |
-| code-review | PASS | 结构及副本一致；外部 issue-tracker 依赖已按说明性外部资源处理 |
+| code-review | CONDITIONAL-PASS | 结构及副本一致；技能仍要求 `docs/agents/issue-tracker.md`，该外部前置文件当前不存在 |
 | dispatching-parallel-agents | PASS | 结构与引用通过；测试文件路径属于任务示例文本，不是 Markdown 链接 |
-| docx | CONDITIONAL-PASS | 结构通过；未安装 `python-docx`/Office，未完成真实文档产物测试 |
+| docx | PASS | 隔离 venv 生成并读回 minimal.docx，文本断言通过 |
 | executing-plans | PASS | 结构与引用通过 |
 | finishing-a-development-branch | PASS | 结构与引用通过 |
 | frontend-design | PASS | 结构通过；与 `.agents` 副本一致 |
 | git-commit | PASS | 结构通过；与安全提交技能职责可区分 |
 | git-safe-commit | PASS | 结构、敏感信息规则和职责边界通过 |
-| mcp-builder | CONDITIONAL-PASS | 结构通过；未安装 `fastmcp`，未运行 MCP stub |
-| pdf | CONDITIONAL-PASS | 结构通过；缺少 PDF 生成/读取依赖，未完成真实 artifact 测试 |
-| playwright-cli | CONDITIONAL-PASS | 结构通过但命令不可用；另有缺失示例快照引用 |
+| mcp-builder | FAIL-DEPENDENCY | `mcp.server.fastmcp` 不存在，fastmcp 未安装；依赖根因已确认 |
+| pdf | PASS | 隔离 venv 用 pypdf 生成/读取 minimal.pdf，1 页断言通过 |
+| playwright-cli | BLOCKED | Chromium 下载网络阻塞：CDN 可达但下载无进展 |
 | project-bootstrap | PASS | 结构与 agent 配置引用通过 |
 | receiving-code-review | PASS | 结构与引用通过 |
 | release-readiness | PASS | 结构与 agent 配置引用通过 |
@@ -90,10 +92,10 @@ Hermes 的结构检查、OpenAPI YAML 解析和 Python 语法检查证据可信�
 | vercel-react-best-practices | PASS | 副本一致；三个规则链接均已补 `rules/` 前缀 |
 | verification-before-completion | PASS | 结构与引用通过 |
 | web-design-guidelines | PASS | 结构与引用通过 |
-| webapp-testing | CONDITIONAL-PASS | 结构通过；缺少 Playwright CLI/浏览器，未完成页面交互测试 |
+| webapp-testing | BLOCKED | Chromium 下载网络阻塞，未执行页面交互 |
 | writing-plans | PASS | 结构与引用通过；占位词出现在自检规则示例中 |
 | writing-skills | PASS | 外部文档引用已明确标注为外部资源，不再形成缺失本地链接 |
-| xlsx | CONDITIONAL-PASS | 结构通过；未安装 `openpyxl`/Office，未完成真实表格产物测试 |
+| xlsx | PASS | 隔离 venv 生成/读取 minimal.xlsx，A1 断言通过 |
 
 ## 4. 必须条件与后续动作
 
