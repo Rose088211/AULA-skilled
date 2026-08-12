@@ -9,13 +9,13 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 32 |
+| PASS | 33 |
 | CONDITIONAL-PASS | 0 |
 | BLOCKED | 2 |
-| FAIL-DEPENDENCY | 1 |
+| FAIL-DEPENDENCY | 0 |
 | **合计** | **35** |
 
-结构校验未发现不可解析 frontmatter、缺失 `name`/`description`、无法解析的仓库内引用或 Python 语法错误。docx、xlsx、pdf 已在隔离 venv 完成真实产物冒烟；mcp-builder 因 FastMCP 依赖发现失败；playwright-cli 与 webapp-testing 因 Chromium 下载网络阻塞而 BLOCKED。
+结构校验未发现不可解析 frontmatter、缺失 `name`/`description`、无法解析的仓库内引用或 Python 语法错误。docx、xlsx、pdf 已在隔离 venv 完成真实产物冒烟；code-review 前置文件已补全；mcp-builder 已按 `from fastmcp import FastMCP` 修复并通过 stdio 握手；playwright-cli 与 webapp-testing 因 Chromium 下载网络阻塞而 BLOCKED。
 
 ## 2. 实际执行证据
 
@@ -47,7 +47,7 @@
 - `python-docx`、`openpyxl`、`fitz`、`reportlab`、`playwright`、`fastmcp` 均不可用。
 - `node`、`npx` 可用；`playwright`、`playwright-cli` 命令不可用。
 
-因此 docx/xlsx/pdf 的最小文件生成、Playwright 页面交互、MCP stub 运行不能在本环境诚实完成，均标记 `NOT-TESTABLE`，没有伪造通过结果。
+docx/xlsx/pdf 的最小文件生成已通过；FastMCP stdio 握手已通过；浏览器交互因 Chromium 下载阻塞未执行。
 
 ## 3. 逐技能结果
 
@@ -68,7 +68,7 @@
 | frontend-design | PASS | frontmatter、引用与 Python 语法检查通过；副本 SHA-256 一致 |
 | git-commit | PASS | frontmatter、引用与 Python 语法检查通过 |
 | git-safe-commit | PASS | frontmatter、引用与 Python 语法检查通过 |
-| mcp-builder | FAIL-DEPENDENCY | `mcp.server.fastmcp` 导入失败：当前 mcp 包不含 FastMCP，且 fastmcp 未安装；技能结构本身通过 |
+| mcp-builder | PASS | `from fastmcp import FastMCP` 导入成功；最小 stdio server 握手通过，工具 `ping` 返回 `pong` |
 | pdf | PASS | 隔离 venv 用 pypdf 生成并读回 `minimal.pdf`，页数为 1 |
 | playwright-cli | BLOCKED | Chromium 下载在 `cdn.playwright.dev` 进度 10% 后无进展并被打断，未伪造浏览器通过 |
 | project-bootstrap | PASS | frontmatter、引用与 Python 语法检查通过 |
@@ -91,7 +91,7 @@
 
 ## 4. 风险与后续建议
 
-1. **P1：补齐 mcp-builder 依赖并重跑**：安装与技能文档匹配的 FastMCP/兼容 MCP SDK 后，重新执行 stdio 握手；当前结果明确为 FAIL-DEPENDENCY。
+1. **P1：浏览器测试**：网络恢复后重跑 Chromium 安装与两个浏览器技能。
 2. **P2：检查 `playwright-cli` 文档示例快照**：`.playwright-cli/page-2026-02-14T19-22-42-679Z.yml` 是示例输出引用；若项目要求“所有引用必须落盘”，应改为明确的示例说明或补充示例资产。当前未改动上游技能文件。
 3. **P2：由 Codex 独立复核敏感信息扫描**：本轮只做了结构/引用检查；应按验收计划对全库执行凭据、私有 URL、内网 IP、个人信息扫描，并人工审查脚本安全性。
 4. **浏览器测试保持阻塞状态**：Chromium 下载网络无进展；网络恢复后再执行 playwright-cli 与 webapp-testing。

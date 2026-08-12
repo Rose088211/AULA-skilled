@@ -10,14 +10,14 @@
 
 | 结果 | 数量 |
 |---|---:|
-| PASS | 31 |
-| CONDITIONAL-PASS | 1 |
+| PASS | 33 |
+| CONDITIONAL-PASS | 0 |
 | BLOCKED | 2 |
-| FAIL-DEPENDENCY | 1 |
+| FAIL-DEPENDENCY | 0 |
 | FAIL | 0 |
 | 合计 | 35 |
 
-Hermes 调试报告的历史摘要曾与逐技能表不一致；Hermes 后续已将调试摘要修正为 `29 PASS / 6 NOT-TESTABLE / 0 CONDITIONAL-PASS`。本报告按当前文件和独立复验结果计数。
+当前摘要与逐技能表已统一；docx/xlsx/pdf 实测通过，code-review 前置文件已补全，mcp-builder 已按独立 fastmcp 包路径修复并通过 stdio 握手，两个浏览器技能因 Chromium 网络阻塞而 BLOCKED。
 
 ## 2. 验收证据
 
@@ -68,7 +68,7 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 | chinese-project-docs | PASS | 结构与 agent 配置引用通过 |
 | claude-api | PASS | description 复验为 688 字符；正文引用目标存在 |
 | cli-wrapper | PASS | 结构与本地引用通过 |
-| code-review | CONDITIONAL-PASS | 结构及副本一致；技能仍要求 `docs/agents/issue-tracker.md`，该外部前置文件当前不存在 |
+| code-review | PASS | 结构及副本一致；所需 issue-tracker 前置文件已补全 |
 | dispatching-parallel-agents | PASS | 结构与引用通过；测试文件路径属于任务示例文本，不是 Markdown 链接 |
 | docx | PASS | 隔离 venv 生成并读回 minimal.docx，文本断言通过 |
 | executing-plans | PASS | 结构与引用通过 |
@@ -99,7 +99,7 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 
 ## 4. 必须条件与后续动作
 
-1. 在隔离环境补齐文档、PDF、MCP、Playwright 依赖，分别生成最小 docx/xlsx/pdf、运行 MCP stub、完成页面交互，再更新本报告中的 6 个条件项。
+1. 网络恢复后重跑 Chromium 安装与两个浏览器技能。
 2. 对示例凭据持续使用 `<...>` 或环境变量表达，降低误报风险；不应把任何真实 token 写入示例。
 
 在上述条件完成前，不建议将本次验收升级为无条件 `ACCEPT`。
@@ -110,11 +110,11 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 
 ### 5.1 计数与逐技能表
 
-当前摘要为 `31 PASS / 1 CONDITIONAL-PASS / 1 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
+当前摘要为 `33 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
 
-- `PASS`：31
-- `CONDITIONAL-PASS`：`code-review`，1
-- `FAIL-DEPENDENCY`：`mcp-builder`，1
+- `PASS`：33
+- `CONDITIONAL-PASS`：0
+- `FAIL-DEPENDENCY`：0
 - `BLOCKED`：`playwright-cli`、`webapp-testing`，2
 - `FAIL`：0
 
