@@ -103,3 +103,56 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 2. 对示例凭据持续使用 `<...>` 或环境变量表达，降低误报风险；不应把任何真实 token 写入示例。
 
 在上述条件完成前，不建议将本次验收升级为无条件 `ACCEPT`。
+
+## 5. 最终复核
+
+复核任务：`task_5098480d22e6`；复核日期：2026-08-13。
+
+### 5.1 计数与逐技能表
+
+当前摘要为 `31 PASS / 1 CONDITIONAL-PASS / 1 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
+
+- `PASS`：31
+- `CONDITIONAL-PASS`：`code-review`，1
+- `FAIL-DEPENDENCY`：`mcp-builder`，1
+- `BLOCKED`：`playwright-cli`、`webapp-testing`，2
+- `FAIL`：0
+
+计数复核结论：**通过**。
+
+### 5.2 产物抽查
+
+证据目录：`C:/Users/26871/AppData/Local/Temp/aula-skill-test/evidence/`。
+
+- `minimal.docx`：ZIP/OOXML 可读，`word/document.xml` 读回文本为 `AULA docx smoke test`，PASS。
+- `minimal.xlsx`：ZIP/OOXML 可读，`xl/worksheets/sheet1.xml` 的 A1 内联字符串为 `AULA xlsx smoke test`，PASS。
+- `minimal.pdf`：存在，429 bytes，文件头为 `%PDF-1.3`，以 `%%EOF` 结束；`results.json` 记录页数为 1，PASS。
+
+产物证据与逐技能表中的 docx/xlsx/pdf PASS 一致。
+
+### 5.3 MCP 与浏览器状态
+
+- `mcp-builder`：证据脚本使用基础 `mcp.server.Server`/stdio 完成 `ping`/`pong`，`results.json` 记录 return code 0、SDK `mcp 0.9.1`。但该证据不等价于 FastMCP 验证；在隔离环境中 `from mcp.server.fastmcp import FastMCP` 与 `import fastmcp` 均失败。因此 `FAIL-DEPENDENCY` 分类如实，剩余条件是安装与技能文档匹配的 FastMCP 后重跑 FastMCP 路径。
+- `playwright-cli`、`webapp-testing`：报告记录 Chromium 下载在 CDN 进度约 10% 后无进展并被中止，没有伪造浏览器产物或通过结果；`BLOCKED` 分类如实。剩余条件是网络恢复或提供可用浏览器缓存后重跑。
+
+### 5.4 五项内容修复
+
+README 35 技能索引、`claude-api` 688 字符 description、Vercel 三个 `rules/` 链接、writing-skills 外部资源说明、Playwright 快照说明均已由前次复验关闭；本次未发现回归。
+
+### 5.5 报告一致性与终审结论
+
+摘要和逐技能表一致，但报告前文仍保留两处历史文字，需要明确解释：
+
+1. 第 1 节仍引用早期 `29 PASS / 6 NOT-TESTABLE` 调试摘要；当前 DEBUG 报告摘要已更新为 `32 PASS / 2 BLOCKED / 1 FAIL-DEPENDENCY`。
+2. 第 4 节仍使用“补齐 6 项条件”的旧措辞；当前 docx/xlsx/pdf 已关闭，剩余是 FastMCP 依赖、浏览器网络阻塞和 code-review 外部 issue-tracker 前置条件。
+
+这些是报告文档的历史残留，不改变当前摘要和逐技能表的计数，但在删除或改写前不能称为完全无残留的一致性报告。
+
+**终审结论：ACCEPT-WITH-CONDITIONS**
+
+剩余条件：
+
+1. 安装匹配的 FastMCP 依赖并重跑 `mcp-builder` 的 FastMCP 路径；
+2. 网络或浏览器缓存可用后重跑 `playwright-cli` 与 `webapp-testing`；
+3. 为 `code-review` 提供 `docs/agents/issue-tracker.md`，或将该外部前置条件改成明确的可选外部资源；
+4. 清理验收报告前文的历史计数和旧条件措辞。
