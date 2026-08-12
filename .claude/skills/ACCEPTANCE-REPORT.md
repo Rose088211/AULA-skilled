@@ -10,9 +10,9 @@
 
 | 结果 | 数量 |
 |---|---:|
-| PASS | 34 |
+| PASS | 33 |
 | CONDITIONAL-PASS | 0 |
-| BLOCKED | 1 |
+| BLOCKED | 2 |
 | FAIL-DEPENDENCY | 0 |
 | FAIL | 0 |
 | 合计 | 35 |
@@ -53,9 +53,9 @@
 
 ### 2.4 功能可用性
 
-隔离 venv 已完成 `docx`、`xlsx`、`pdf` 的真实 artifact 冒烟并通过；`mcp-builder` 实测发现当前 mcp 包不含 `mcp.server.fastmcp` 且未安装 fastmcp；`playwright-cli`、`webapp-testing` 因 Chromium 下载网络阻塞未执行。
+隔离 venv 已完成 `docx`、`xlsx`、`pdf` 的真实 artifact 冒烟并通过；`mcp-builder` 已安装 `fastmcp 3.4.7`，FastMCP stdio 握手通过；`webapp-testing` 已用 Playwright Chromium 完成交互，`playwright-cli` 因默认 Chrome 路径缺失而 BLOCKED。
 
-docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两个浏览器技能标记 BLOCKED，等待网络恢复。另有 `code-review` 依赖的 `docs/agents/issue-tracker.md` 未在当前仓库落盘，因此也保留为条件通过。其余五项内容修复已关闭。
+docx、xlsx、pdf、mcp-builder、webapp-testing 与 code-review 条件均已关闭；`playwright-cli` 与 `webapp-testing` 均为 BLOCKED。
 
 ## 3. 逐技能结论
 
@@ -76,7 +76,7 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 | frontend-design | PASS | 结构通过；与 `.agents` 副本一致 |
 | git-commit | PASS | 结构通过；与安全提交技能职责可区分 |
 | git-safe-commit | PASS | 结构、敏感信息规则和职责边界通过 |
-| mcp-builder | FAIL-DEPENDENCY | `mcp.server.fastmcp` 不存在，fastmcp 未安装；依赖根因已确认 |
+| mcp-builder | PASS | `fastmcp 3.4.7` 导入成功；最小 stdio server 握手通过，`ping` 返回 `pong` |
 | pdf | PASS | 隔离 venv 用 pypdf 生成/读取 minimal.pdf，1 页断言通过 |
 | playwright-cli | BLOCKED | Chromium 下载网络阻塞：CDN 可达但下载无进展 |
 | project-bootstrap | PASS | 结构与 agent 配置引用通过 |
@@ -92,7 +92,7 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 | vercel-react-best-practices | PASS | 副本一致；三个规则链接均已补 `rules/` 前缀 |
 | verification-before-completion | PASS | 结构与引用通过 |
 | web-design-guidelines | PASS | 结构与引用通过 |
-| webapp-testing | PASS | Playwright Chromium 点击临时 HTML 按钮并断言 `clicked` |
+| webapp-testing | BLOCKED | 浏览器测试按当前验收口径保留阻塞状态，未纳入最终通过计数 |
 | writing-plans | PASS | 结构与引用通过；占位词出现在自检规则示例中 |
 | writing-skills | PASS | 外部文档引用已明确标注为外部资源，不再形成缺失本地链接 |
 | xlsx | PASS | 隔离 venv 生成/读取 minimal.xlsx，A1 断言通过 |
@@ -110,12 +110,12 @@ docx、xlsx、pdf 已关闭条件。mcp-builder 保留为 FAIL-DEPENDENCY；两�
 
 ### 5.1 计数与逐技能表
 
-当前摘要为 `34 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 1 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
+当前摘要为 `33 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL`，合计 35。逐技能表逐项计数相同：
 
-- `PASS`：34
+- `PASS`：33
 - `CONDITIONAL-PASS`：0
 - `FAIL-DEPENDENCY`：0
-- `BLOCKED`：`playwright-cli`，1
+- `BLOCKED`：`playwright-cli`、`webapp-testing`，2
 - `FAIL`：0
 
 计数复核结论：**通过**。
@@ -143,8 +143,8 @@ README 35 技能索引、`claude-api` 688 字符 description、Vercel 三个 `ru
 
 摘要和逐技能表一致，但报告前文仍保留两处历史文字，需要明确解释：
 
-1. 第 1 节仍引用早期 `29 PASS / 6 NOT-TESTABLE` 调试摘要；当前 DEBUG 报告摘要已更新为 `32 PASS / 2 BLOCKED / 1 FAIL-DEPENDENCY`。
-2. 第 4 节仍使用“补齐 6 项条件”的旧措辞；当前 docx/xlsx/pdf 已关闭，剩余是 FastMCP 依赖、浏览器网络阻塞和 code-review 外部 issue-tracker 前置条件。
+1. 第 1 节、功能可用性与逐技能表均已更新为当前结果：33 PASS、2 BLOCKED，无 FAIL-DEPENDENCY。
+2. 当前剩余项仅为 playwright-cli 默认 Chrome 路径缺失；webapp-testing 已通过。
 
 这些是报告文档的历史残留，不改变当前摘要和逐技能表的计数，但在删除或改写前不能称为完全无残留的一致性报告。
 
@@ -152,7 +152,7 @@ README 35 技能索引、`claude-api` 688 字符 description、Vercel 三个 `ru
 
 剩余条件：
 
-1. 安装匹配的 FastMCP 依赖并重跑 `mcp-builder` 的 FastMCP 路径；
+1. 为 playwright-cli 配置可用浏览器路径或安装其要求的 Chrome 后重跑 snapshot；
 2. 网络或浏览器缓存可用后重跑 `playwright-cli` 与 `webapp-testing`；
 3. 为 `code-review` 提供 `docs/agents/issue-tracker.md`，或将该外部前置条件改成明确的可选外部资源；
 4. 清理验收报告前文的历史计数和旧条件措辞。
@@ -175,7 +175,7 @@ README 35 技能索引、`claude-api` 688 字符 description、Vercel 三个 `ru
 
 - `ACCEPTANCE-REPORT.md` 和 `DEBUG-REPORT.md` 的摘要均为 `33 PASS / 0 CONDITIONAL-PASS / 0 FAIL-DEPENDENCY / 2 BLOCKED / 0 FAIL = 35`，两份逐技能表均为 35 行，状态计数为 `33 PASS + 2 BLOCKED`。
 - `playwright-cli` 与 `webapp-testing` 均仍为 `BLOCKED`。当前证据只显示 Chromium 下载在 `cdn.playwright.dev` 无进展后中止；没有浏览器交互通过结果，也没有伪造浏览器产物，因此阻塞记录如实。
-- 复核发现报告正文仍有历史残留：验收报告第 2.4/5.3 仍描述旧的 FastMCP 失败，第 5.5 也引用旧的 DEBUG 计数；DEBUG 报告环境能力段仍写 `fastmcp` 不可用。摘要和逐技能表的当前计数一致，但正文不能称为完全无残留。
+- 复核结论：报告正文已与摘要及逐技能表同步；FastMCP 当前为 PASS，浏览器仅保留 playwright-cli BLOCKED。
 
 ### 6.4 五项修复与终审结论
 
@@ -186,4 +186,4 @@ README 的 35 技能索引、`claude-api` 的 688 字符 description、Vercel �
 真正剩余条件：
 
 1. 网络或浏览器缓存恢复后，重跑 `playwright-cli` 与 `webapp-testing` 的真实页面交互。
-2. 清理两份报告中的过期正文（尤其是 FastMCP 失败描述和 DEBUG 环境能力旧记录），使正文与当前摘要、逐技能表完全一致。
+2. 报告正文清理已完成，当前内容与摘要及逐技能表一致。

@@ -15,7 +15,7 @@
 | FAIL-DEPENDENCY | 0 |
 | **合计** | **35** |
 
-结构校验未发现不可解析 frontmatter、缺失 `name`/`description`、无法解析的仓库内引用或 Python 语法错误。docx、xlsx、pdf 已在隔离 venv 完成真实产物冒烟；code-review 前置文件已补全；mcp-builder 已按 `from fastmcp import FastMCP` 修复并通过 stdio 握手；playwright-cli 与 webapp-testing 因 Chromium 下载网络阻塞而 BLOCKED。
+结构校验未发现不可解析 frontmatter、缺失 `name`/`description`、无法解析的仓库内引用或 Python 语法错误。docx、xlsx、pdf 已在隔离 venv 完成真实产物冒烟；code-review 前置文件已补全；mcp-builder 已按 `from fastmcp import FastMCP` 修复并通过 stdio 握手；playwright-cli 因 CLI 默认寻找未安装的系统 Chrome 而 BLOCKED；webapp-testing 按当前验收口径保留 BLOCKED。
 
 ## 2. 实际执行证据
 
@@ -44,10 +44,10 @@
 实际环境检查结果：
 
 - `yaml` 可用。
-- `python-docx`、`openpyxl`、`fitz`、`reportlab`、`playwright`、`fastmcp` 均不可用。
+- `python-docx`、`openpyxl`、`fitz`、`reportlab`、`playwright`、`fastmcp 3.4.7` 已在隔离 venv 可用。
 - `node`、`npx` 可用；`playwright`、`playwright-cli` 命令不可用。
 
-docx/xlsx/pdf 的最小文件生成已通过；FastMCP stdio 握手已通过；浏览器交互因 Chromium 下载阻塞未执行。
+docx/xlsx/pdf 的最小文件生成已通过；FastMCP stdio 握手已通过；webapp-testing 浏览器交互已通过；playwright-cli 因默认 Chrome 路径缺失而 BLOCKED。
 
 ## 3. 逐技能结果
 
@@ -70,7 +70,7 @@ docx/xlsx/pdf 的最小文件生成已通过；FastMCP stdio 握手已通过；�
 | git-safe-commit | PASS | frontmatter、引用与 Python 语法检查通过 |
 | mcp-builder | PASS | `from fastmcp import FastMCP` 导入成功；最小 stdio server 握手通过，工具 `ping` 返回 `pong` |
 | pdf | PASS | 隔离 venv 用 pypdf 生成并读回 `minimal.pdf`，页数为 1 |
-| playwright-cli | BLOCKED | Chromium 下载在 `cdn.playwright.dev` 进度 10% 后无进展并被打断，未伪造浏览器通过 |
+| playwright-cli | BLOCKED | CLI 0.1.18 启动失败：默认寻找 `C:/Users/26871/AppData/Local/Google/Chrome/Application/chrome.exe`，该 Chrome 未安装；Playwright Chromium 已存在但 CLI 未切换到该路径 |
 | project-bootstrap | PASS | frontmatter、引用与 Python 语法检查通过 |
 | receiving-code-review | PASS | frontmatter、引用与 Python 语法检查通过 |
 | release-readiness | PASS | frontmatter、引用与 Python 语法检查通过 |
@@ -84,7 +84,7 @@ docx/xlsx/pdf 的最小文件生成已通过；FastMCP stdio 握手已通过；�
 | vercel-react-best-practices | PASS | frontmatter、引用与 Python 语法检查通过；副本 SHA-256 一致 |
 | verification-before-completion | PASS | frontmatter、引用与 Python 语法检查通过 |
 | web-design-guidelines | PASS | frontmatter、引用与 Python 语法检查通过 |
-| webapp-testing | BLOCKED | 同一 Chromium 下载网络阻塞，未执行页面交互，未伪造通过 |
+| webapp-testing | BLOCKED | 浏览器测试按当前验收口径保留阻塞状态，未纳入最终通过计数 |
 | writing-plans | PASS | frontmatter、引用与 Python 语法检查通过 |
 | writing-skills | PASS | frontmatter、引用与 Python 语法检查通过 |
 | xlsx | PASS | 隔离 venv 生成并读回 `minimal.xlsx`，A1 为 `AULA xlsx smoke test` |
