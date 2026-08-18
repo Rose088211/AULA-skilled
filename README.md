@@ -1,6 +1,6 @@
 # AULA-skilled
 
-AULA-skilled 是面向 Claude Code 与兼容 Agent 的技能库，共 **35 个技能**：26 个外部锁定技能，以及 9 个本地原创技能。
+AULA-skilled 是面向 Claude Code 与兼容 Agent 的技能库，共 **36 个技能**：26 个外部锁定技能，以及 10 个本地原创技能。
 
 ## 技能索引
 
@@ -12,11 +12,11 @@ AULA-skilled 是面向 Claude Code 与兼容 Agent 的技能库，共 **35 个�
 
 `brainstorming` · `claude-api` · `code-review` · `dispatching-parallel-agents` · `docx` · `executing-plans` · `finishing-a-development-branch` · `frontend-design` · `mcp-builder` · `pdf` · `playwright-cli` · `receiving-code-review` · `requesting-code-review` · `skill-creator` · `subagent-driven-development` · `systematic-debugging` · `test-driven-development` · `using-git-worktrees` · `using-superpowers` · `vercel-react-best-practices` · `verification-before-completion` · `web-design-guidelines` · `webapp-testing` · `writing-plans` · `writing-skills` · `xlsx`
 
-### 本地原创技能（9）
+### 本地原创技能（10）
 
 不在外部 lock 中，按仓库内容维护：
 
-`api-contract` · `changelog-generator` · `chinese-humanizer` · `chinese-project-docs` · `cli-wrapper` · `git-commit` · `git-safe-commit` · `project-bootstrap` · `release-readiness`
+`api-contract` · `changelog-generator` · `chinese-humanizer` · `chinese-project-docs` · `cli-wrapper` · `dsh-tui` · `git-commit` · `git-safe-commit` · `project-bootstrap` · `release-readiness`
 
 ## 使用与维护
 

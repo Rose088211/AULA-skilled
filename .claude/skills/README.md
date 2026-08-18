@@ -1,6 +1,6 @@
 # AULA-skilled · 技能库
 
-本目录是 `AULA-skilled` 项目的 AI Agent 技能库，供 Claude Code（及兼容 agent）加载。共 **35 个技能**：26 个来自社区/官方，9 个为本地原创。
+本目录是 `AULA-skilled` 项目的 AI Agent 技能库，供 Claude Code（及兼容 agent）加载。共 **36 个技能**：26 个来自社区/官方，10 个为本地原创。
 
 ## 目录
 
@@ -20,12 +20,15 @@
 | `git-safe-commit` | 安全的提交流程：审 diff、扫密钥敏感信息、逻辑分组、规范 commit message |
 | `api-contract` | REST API 契约设计 + OpenAPI 3 规范生成 |
 | `cli-wrapper` | 把函数/脚本封装成可安装、可发布的命令行工具 |
+| `dsh-tui` | DeepSeek Harness 的 Claude Code 风格终端界面（dsh CLI 的 TUI profile）：安装启动、会话工作流、配置排查与 Orca 集成 |
 | `chinese-project-docs` | 依据仓库事实撰写/维护中文项目文档（README、开发指南、API 说明） |
 | `project-bootstrap` | 进入陌生仓库时快速摸清技术栈、包管理、入口命令与风险，建立可执行的工作流 |
 | `release-readiness` | 提交/合并/发布前的就绪检查：scope、测试、构建、密钥扫描、逐项给结论 |
 | `git-commit` | 依据 diff 自动生成 conventional commit message（类型/scope/描述/分组） |
 
-其中 `chinese-humanizer`/`changelog-generator`/`git-safe-commit`/`api-contract`/`cli-wrapper` 为本仓库手写原创；`chinese-project-docs`/`project-bootstrap`/`release-readiness`/`git-commit` 由环境脚手架自动生成后补全（Source: local）。均可直接复制到其他项目使用。
+其中 `chinese-humanizer`/`changelog-generator`/`git-safe-commit`/`api-contract`/`cli-wrapper`/`dsh-tui` 为本仓库手写原创；`chinese-project-docs`/`project-bootstrap`/`release-readiness`/`git-commit` 由环境脚手架自动生成后补全（Source: local）。均可直接复制到其他项目使用。
+
+> `dsh-tui` 同时镜像到共享目录 `.agents/skills/dsh-tui/`（两处内容一致），供 codex / gemini 等按 agents.md 规范读技能的 agent 加载——便于它们在 Orca 里按 `references/cross-agent-collaboration.md` 的协议调用并协作 dsh-tui。
 
 > `git-safe-commit` 与 `git-commit` 分工：前者做提交前的安全审查（diff 审阅、密钥扫描、分组），后者负责生成规范化的 commit message。提交流程建议 `git-safe-commit` 打底、`git-commit` 出信息。
 
